@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Orders.Protos;
 
 namespace Frontend
 {
@@ -31,6 +32,12 @@ namespace Frontend
                 var uri = config.GetServiceUri("Ingredients", "https");
                 options.Address = uri;
             });
+            services.AddGrpcClient<OrdersService.OrdersServiceClient>(((provider, options) =>
+            {
+                var config = provider.GetRequiredService<IConfiguration>();
+                var uri = config.GetServiceUri("Orders", "https");
+                options.Address = uri;
+            }));
             services.AddControllersWithViews();
         }
 

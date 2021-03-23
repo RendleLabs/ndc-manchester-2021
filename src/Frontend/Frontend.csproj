@@ -5,6 +5,7 @@
   <ItemGroup>
     <Protobuf Include="Protos\ingredients.proto" GrpcServices="Client" ProtoRoot="Protos" />
     <Protobuf Include="Protos\decimal.proto" GrpcServices="None" />
+    <Protobuf Include="Protos\orders.proto" GrpcServices="Client" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Google.Protobuf" Version="3.15.6" />
