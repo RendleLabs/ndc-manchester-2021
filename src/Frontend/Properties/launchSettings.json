@@ -5,7 +5,10 @@
       "launchBrowser": true,
       "applicationUrl": "https://localhost:5001;http://localhost:5000",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "Service__Ingredients__https__Host": "localhost",
+        "Service__Ingredients__https__Port": "5003",
+        "Service__Ingredients__https__Protocol": "https"
       }
     }
   }

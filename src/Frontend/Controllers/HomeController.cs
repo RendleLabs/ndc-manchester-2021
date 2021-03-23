@@ -24,6 +24,7 @@ namespace Frontend.Controllers
         [HttpGet("")]
         public async Task<IActionResult> Index()
         {
+            _log.LogInformation("Index");
             var toppingsResponse = await _client.GetToppingsAsync(new GetToppingsRequest());
             var toppings = toppingsResponse.Toppings
                 .Select(t => new ToppingViewModel(t.Topping.Id, t.Topping.Name, Convert.ToDecimal(t.Topping.Price)))

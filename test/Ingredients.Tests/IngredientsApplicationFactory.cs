@@ -5,6 +5,7 @@ using Ingredients.Protos;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using NSubstitute;
 using Pizza.Data;
 using TestHelpers;
@@ -23,7 +24,7 @@ namespace Ingredients.Tests
         {
             builder.ConfigureServices(services =>
             {
-                services.Remove<IToppingData>();
+                services.RemoveAll<IToppingData>();
 
                 var toppingEntities = new List<ToppingEntity>
                 {
