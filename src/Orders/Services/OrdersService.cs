@@ -8,7 +8,7 @@ using Orders.PubSub;
 
 namespace Orders.Services
 {
-    public class OrdersService : Protos.OrdersService.OrdersServiceBase
+    internal class OrdersService : Protos.OrdersService.OrdersServiceBase
     {
         private readonly IngredientsService.IngredientsServiceClient _ingredients;
         private readonly IOrderPublisher _orderPublisher;
