@@ -1,6 +1,8 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Ingredients.Protos;
+using NSubstitute;
 using TestHelpers;
 using Xunit;
 
@@ -26,6 +28,19 @@ namespace Ingredients.Tests
                 t => Assert.Equal("cheese", t.Topping.Id),
                 t => Assert.Equal("tomato", t.Topping.Id)
                 );
+        }
+
+        [Fact]
+        public async Task DecrementsToppings()
+        {
+            var client = _factory.CreateGrpcClient();
+            var request = new DecrementToppingsRequest
+            {
+                ToppingIds = {"42"}
+            };
+            await client.DecrementToppingsAsync(request);
+            await _factory.ToppingDataSub.Received()
+                .DecrementStockAsync("42", Arg.Any<CancellationToken>());
         }
     }
 }

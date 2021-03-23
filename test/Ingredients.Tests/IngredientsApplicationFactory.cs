@@ -19,6 +19,8 @@ namespace Ingredients.Tests
             var channel = this.CreateGrpcChannel();
             return new IngredientsService.IngredientsServiceClient(channel);
         }
+        
+        public IToppingData ToppingDataSub { get; private set; }
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
@@ -32,12 +34,12 @@ namespace Ingredients.Tests
                     new ToppingEntity("tomato", "Tomato", 0.75m, 100),
                 };
 
-                var toppingDataSub = Substitute.For<IToppingData>();
+                ToppingDataSub = Substitute.For<IToppingData>();
                 
-                toppingDataSub.GetAsync(Arg.Any<CancellationToken>())
+                ToppingDataSub.GetAsync(Arg.Any<CancellationToken>())
                     .Returns(Task.FromResult(toppingEntities));
 
-                services.AddSingleton(toppingDataSub);
+                services.AddSingleton(ToppingDataSub);
                 
                 var crustEntities = new List<CrustEntity>
                 {
