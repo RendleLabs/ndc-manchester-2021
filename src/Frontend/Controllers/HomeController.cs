@@ -25,16 +25,17 @@ namespace Frontend.Controllers
         public async Task<IActionResult> Index()
         {
             _log.LogInformation("Index");
+            
             var toppingsResponse = await _client.GetToppingsAsync(new GetToppingsRequest());
             var toppings = toppingsResponse.Toppings
                 .Select(t => new ToppingViewModel(t.Topping.Id, t.Topping.Name, Convert.ToDecimal(t.Topping.Price)))
                 .ToList();
+
+            var crustsResponse = await _client.GetCrustsAsync(new GetCrustsRequest());
+            var crusts = crustsResponse.Crusts
+                .Select(c => new CrustViewModel(c.Crust.Id, c.Crust.Name, c.Crust.Size, Convert.ToDecimal(c.Crust.Price)))
+                .ToList();
             
-            var crusts = new List<CrustViewModel>
-            {
-                new("thin9", "Thin", 9, 5m),
-                new("deep9", "Deep", 9, 6m),
-            };
             var viewModel = new HomeViewModel(toppings, crusts);
             return View(viewModel);
         }

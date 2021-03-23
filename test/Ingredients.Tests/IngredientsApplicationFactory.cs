@@ -33,10 +33,24 @@ namespace Ingredients.Tests
                 };
 
                 var toppingDataSub = Substitute.For<IToppingData>();
+                
                 toppingDataSub.GetAsync(Arg.Any<CancellationToken>())
                     .Returns(Task.FromResult(toppingEntities));
 
                 services.AddSingleton(toppingDataSub);
+                
+                var crustEntities = new List<CrustEntity>
+                {
+                    new CrustEntity("thin9", "Thin", 9, 2.5m, 100),
+                    new CrustEntity("deep9", "Deep", 9, 3m, 100),
+                };
+
+                var crustDataSub = Substitute.For<ICrustData>();
+                
+                crustDataSub.GetAsync(Arg.Any<CancellationToken>())
+                    .Returns(Task.FromResult(crustEntities));
+
+                services.AddSingleton(crustDataSub);
             });
             base.ConfigureWebHost(builder);
         }

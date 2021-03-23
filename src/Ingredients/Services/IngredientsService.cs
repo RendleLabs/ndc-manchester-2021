@@ -11,11 +11,13 @@ namespace Ingredients
     internal class IngredientsService : Protos.IngredientsService.IngredientsServiceBase
     {
         private readonly IToppingData _toppingData;
+        private readonly ICrustData _crustData;
         private readonly ILogger<IngredientsService> _logger;
 
-        public IngredientsService(IToppingData toppingData, ILogger<IngredientsService> logger)
+        public IngredientsService(IToppingData toppingData, ICrustData crustData, ILogger<IngredientsService> logger)
         {
             _toppingData = toppingData;
+            _crustData = crustData;
             _logger = logger;
         }
 
@@ -40,6 +42,43 @@ namespace Ingredients
                 {
                     Toppings = {availableToppings}
                 };
+                return response;
+            }
+            catch (OperationCanceledException)
+            {
+                _logger.LogWarning("Operation was cancelled.");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error: {ex.Message}");
+                throw;
+            }
+        }
+
+        public override async Task<GetCrustsResponse> GetCrusts(GetCrustsRequest request, ServerCallContext context)
+        {
+            try
+            {
+                var crusts = await _crustData.GetAsync(context.CancellationToken);
+                var availableCrusts = crusts.Select(t =>
+                    new AvailableCrust
+                    {
+                        Quantity = t.StockCount,
+                        Crust = new Crust
+                        {
+                            Id = t.Id,
+                            Name = t.Name,
+                            Size = t.Size,
+                            Price = Convert.ToDouble(t.Price)
+                        }
+                    });
+
+                var response = new GetCrustsResponse
+                {
+                    Crusts = {availableCrusts}
+                };
+
                 return response;
             }
             catch (OperationCanceledException)
