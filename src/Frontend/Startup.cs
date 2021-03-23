@@ -35,7 +35,8 @@ namespace Frontend
             services.AddGrpcClient<OrdersService.OrdersServiceClient>(((provider, options) =>
             {
                 var config = provider.GetRequiredService<IConfiguration>();
-                var uri = config.GetServiceUri("Orders", "https");
+                var uri = config.GetServiceUri("Orders", "https")
+                          ?? new Uri("https://localhost:5005");
                 options.Address = uri;
             }));
             services.AddControllersWithViews();

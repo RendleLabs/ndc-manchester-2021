@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Orders.Protos;
+using Orders.PubSub;
 using OrdersService = Orders.Services.OrdersService;
 
 namespace Orders
@@ -25,6 +26,9 @@ namespace Orders
                 var uri = config.GetServiceUri("Ingredients", "https");
                 options.Address = uri;
             }));
+            services.AddOrderPubSub();
+            services.AddSingleton<OrdersService>();
+            
             services.AddGrpc();
         }
 

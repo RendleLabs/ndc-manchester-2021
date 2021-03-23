@@ -11,7 +11,12 @@ services:
   bindings:
     - protocol: https
       port: 5001
+      
 - name: ingredients
   project: src/Ingredients/Ingredients.csproj
+  
 - name: orders
   project: src/Orders/Orders.csproj
+  bindings:
+    - protocol: https
+      port: 5005
