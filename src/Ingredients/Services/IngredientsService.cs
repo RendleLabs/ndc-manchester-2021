@@ -34,7 +34,7 @@ namespace Ingredients
                         {
                             Id = t.Id,
                             Name = t.Name,
-                            Price = (double) t.Price
+                            Price = t.Price
                         }
                     });
 
@@ -70,7 +70,7 @@ namespace Ingredients
                             Id = t.Id,
                             Name = t.Name,
                             Size = t.Size,
-                            Price = Convert.ToDouble(t.Price)
+                            Price = t.Price
                         }
                     });
 
