@@ -52,7 +52,7 @@ namespace Ingredients
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error: {ex.Message}");
-                throw;
+                throw new RpcException(new Status(StatusCode.Unknown, ex.Message));
             }
         }
 
