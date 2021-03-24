@@ -39,7 +39,7 @@ namespace AuthHelp
             handler.ClientCertificates.Add(clientCert);
             
             // Verify that the server and client certs are from the same issuer
-            handler.ServerCertificateCustomValidationCallback = (message, serverCert, arg3, arg4) =>
+            handler.ServerCertificateCustomValidationCallback = (_, serverCert, _, _) =>
                 serverCert.Issuer == clientCert.Issuer;
             
             return handler;

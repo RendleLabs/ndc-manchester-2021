@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using Orders.Protos;
@@ -28,7 +29,7 @@ namespace Orders.Services
             _logger = logger;
         }
 
-        [Authorize]
+        [Authorize(JwtBearerDefaults.AuthenticationScheme)]
         public override async Task<PlaceOrderResponse> PlaceOrder(PlaceOrderRequest request, ServerCallContext context)
         {
             var httpContext = context.GetHttpContext();

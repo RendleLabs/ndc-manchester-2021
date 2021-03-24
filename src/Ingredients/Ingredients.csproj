@@ -5,16 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Protobuf Include="Protos\ingredients.proto" GrpcServices="Server"
-              Access="internal" ProtoRoot="Protos" />
+    <Protobuf Include="Protos\ingredients.proto" GrpcServices="Server" Access="internal" ProtoRoot="Protos" />
     <Protobuf Include="Protos\decimal.proto" GrpcServices="None" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Grpc.AspNetCore" Version="2.34.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Certificate" Version="5.0.4" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AuthHelp\AuthHelp.csproj" />
     <ProjectReference Include="..\Pizza.Data\Pizza.Data.csproj" />
   </ItemGroup>
 

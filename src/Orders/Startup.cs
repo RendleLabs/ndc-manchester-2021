@@ -25,14 +25,20 @@ namespace Orders
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddGrpcClient<IngredientsService.IngredientsServiceClient>(((provider, options) =>
-            {
-                var config = provider.GetRequiredService<IConfiguration>();
-                var uri = config.GetServiceUri("Ingredients", "https");
-                options.Address = uri;
-            }));
+                {
+                    var config = provider.GetRequiredService<IConfiguration>();
+                    var uri = config.GetServiceUri("Ingredients", "https");
+                    options.Address = uri;
+                }))
+                .ConfigureChannel(channel =>
+                {
+                    channel.HttpClient = null;
+                    channel.HttpHandler = DevelopmentModeCertificateHelper.CreateClientHandler();
+                });
+            
             services.AddOrderPubSub();
             services.AddSingleton<OrdersService>();
-            
+
             services.AddGrpc();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -78,10 +84,12 @@ namespace Orders
                 endpoints.MapGet("/generateJwtToken", context =>
                     context.Response.WriteAsync(JwtHelper.GenerateJwtToken(context.Request.Query["name"])));
 
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
-                });
+                endpoints.MapGet("/",
+                    async context =>
+                    {
+                        await context.Response.WriteAsync(
+                            "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
+                    });
             });
         }
     }
