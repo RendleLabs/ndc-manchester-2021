@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using StackExchange.Redis;
 
 namespace Orders.PubSub
 {
@@ -10,6 +11,8 @@ namespace Orders.PubSub
             services.AddSingleton(orderMessages);
             services.AddSingleton<IOrderMessages>(orderMessages);
             services.AddSingleton<IOrderPublisher, OrderPublisher>();
+            services.AddSingleton<IConnectionMultiplexer>(_ =>
+                ConnectionMultiplexer.Connect(Constants.ConnectionString));
             services.AddHostedService<OrderSubscriber>();
             return services;
         }

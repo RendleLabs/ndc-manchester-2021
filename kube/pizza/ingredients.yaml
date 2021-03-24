@@ -7,9 +7,11 @@ spec:
   selector:
     matchLabels:
       run: ingredients
-  replicas: 1
+  replicas: 2
   template:
     metadata:
+      annotations:
+        linkerd.io/inject: enabled
       labels:
         run: ingredients
     spec:
@@ -28,6 +30,12 @@ spec:
           value: "true"
         - name: ASPNETCORE_URLS
           value: "http://0.0.0.0:80"
+        - name: Jaeger__ServiceName
+          value: "ingredients"
+        - name: Jaeger__Host
+          value: "jaeger-agent"
+        - name: Jaeger__Port
+          value: "6831"
 
 ---
 
