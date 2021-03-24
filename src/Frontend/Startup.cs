@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Grpc.Health.V1;
 using Ingredients.Protos;
 using JaegerTracing;
 using Microsoft.AspNetCore.Builder;
@@ -28,12 +29,25 @@ namespace Frontend
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddJaegerTracing();
+
             services.AddGrpcClient<IngredientsService.IngredientsServiceClient>((provider, options) =>
             {
                 var config = provider.GetRequiredService<IConfiguration>();
                 var uri = config.GetServiceUri("Ingredients");
                 options.Address = uri;
             });
+
+            services.AddGrpcClient<Health.HealthClient>("ingredients",
+                (provider, options) =>
+                {
+                    var config = provider.GetRequiredService<IConfiguration>();
+                    var uri = config.GetServiceUri("Ingredients");
+                    options.Address = uri;
+                });
+
+            services.AddHealthChecks()
+                .AddCheck<IngredientsHealthCheck>("Ingredients");
+
             services.AddGrpcClient<OrdersService.OrdersServiceClient>(((provider, options) =>
             {
                 var config = provider.GetRequiredService<IConfiguration>();
@@ -57,15 +71,15 @@ namespace Frontend
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 // app.UseHsts();
             }
+
             // app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseHealthChecks("/health");
+
             app.UseRouting();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Grpc.HealthCheck;
 using JaegerTracing;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -18,7 +19,10 @@ namespace Ingredients
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddJaegerTracing();
+            services.AddSingleton<HealthServiceImpl>();
+            services.AddHostedService<HealthCheckService>();
+            
+            services.AddJaegerTracing(nameof(IngredientsService));
             services.AddGrpc();
             services.AddSingleton<IToppingData, ToppingData>();
             services.AddSingleton<ICrustData, CrustData>();
@@ -37,6 +41,8 @@ namespace Ingredients
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<IngredientsService>();
+
+                endpoints.MapGrpcService<HealthServiceImpl>();
 
                 endpoints.MapGet("/", async context =>
                 {

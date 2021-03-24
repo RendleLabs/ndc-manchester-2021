@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Grpc.Core;
@@ -10,6 +11,7 @@ namespace Ingredients
 {
     internal class IngredientsService : Protos.IngredientsService.IngredientsServiceBase
     {
+        private static readonly ActivitySource Activities = new(nameof(IngredientsService));
         private readonly IToppingData _toppingData;
         private readonly ICrustData _crustData;
         private readonly ILogger<IngredientsService> _logger;
@@ -96,6 +98,9 @@ namespace Ingredients
 
         public override async Task<DecrementToppingsResponse> DecrementToppings(DecrementToppingsRequest request, ServerCallContext context)
         {
+            using var activity = Activities.StartActivity(nameof(DecrementToppings));
+            activity?.AddTag("count", request.ToppingIds.Count);
+            
             var tasks = request.ToppingIds
                 .Select(id => _toppingData.DecrementStockAsync(id));
             await Task.WhenAll(tasks);
@@ -104,6 +109,9 @@ namespace Ingredients
 
         public override async Task<DecrementCrustsResponse> DecrementCrusts(DecrementCrustsRequest request, ServerCallContext context)
         {
+            using var activity = Activities.StartActivity(nameof(DecrementCrusts));
+            activity?.AddTag("count", request.CrustIds.Count);
+            
             var tasks = request.CrustIds
                 .Select(id => _crustData.DecrementStockAsync(id));
             await Task.WhenAll(tasks);

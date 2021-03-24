@@ -25,6 +25,9 @@ RUN dotnet publish src/Ingredients -c Release -o /app --no-build
 
 FROM mcr.microsoft.com/dotnet/aspnet:5.0-focal
 
+COPY ./grpc_health_probe /bin/
+RUN chmod +x /bin/grpc_health_probe
+
 WORKDIR /app
 COPY --from=build /app .
 
