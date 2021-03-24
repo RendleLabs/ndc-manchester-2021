@@ -15,7 +15,7 @@ namespace Orders.Tests
             _factory = factory;
         }
 
-        [Fact(Skip = "Everything is horrible")]
+        [Fact]
         public async Task Subscribes()
         {
             var client = _factory.CreateGrpcClient();

@@ -19,6 +19,7 @@ RUN dotnet restore
 COPY . .
 
 RUN dotnet build -c Release --no-restore
+RUN dotnet test -c Release --no-build ./test/Orders.Tests/Orders.Tests.csproj
 RUN dotnet publish src/Orders -c Release -o /app --no-build
 
 FROM mcr.microsoft.com/dotnet/aspnet:5.0-focal

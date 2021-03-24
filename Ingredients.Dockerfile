@@ -19,6 +19,7 @@ RUN dotnet restore
 COPY . .
 
 RUN dotnet build -c Release --no-restore
+RUN dotnet test -c Release --no-build ./test/Ingredients.Tests/Ingredients.Tests.csproj
 RUN dotnet publish src/Ingredients -c Release -o /app --no-build
 
 FROM mcr.microsoft.com/dotnet/aspnet:5.0-focal
