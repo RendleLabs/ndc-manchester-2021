@@ -23,7 +23,7 @@ namespace Orders
             services.AddGrpcClient<IngredientsService.IngredientsServiceClient>(((provider, options) =>
             {
                 var config = provider.GetRequiredService<IConfiguration>();
-                var uri = config.GetServiceUri("Ingredients", "https");
+                var uri = config.GetServiceUri("Ingredients");
                 options.Address = uri;
             }));
             services.AddOrderPubSub();

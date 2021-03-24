@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: pizza
+spec:
+  selector:
+    matchLabels:
+      run: frontend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: local/frontend:latest
+        imagePullPolicy: Never
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 80
+        env:
+        - name: DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP2UNENCRYPTEDSUPPORT
+          value: "true"
+        - name: ASPNETCORE_URLS
+          value: "http://0.0.0.0:80"
+        - name: Service__Ingredients__Host
+          value: "ingredients"
+        - name: Service__Ingredients__Port
+          value: "80"
+        - name: Service__Ingredients__Protocol
+          value: "http"
+        - name: Service__Orders__Host
+          value: "orders"
+        - name: Service__Orders__Port
+          value: "80"
+        - name: Service__Orders__Protocol
+          value: "http"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: pizza
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    nodePort: 30001
+  selector:
+    run: frontend
